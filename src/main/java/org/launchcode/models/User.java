@@ -1,35 +1,45 @@
 package org.launchcode.models;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class User {
-    private static int nextId = 1;
 
+    @Size(min = 5, max = 15, message = "Username must be 5-15 characters long.")
     private String username;
-    private String email;
-    private String password;
-    private int id;
-    private LocalDate dateRegistered;
 
-    public User(String username, String email, String password) {
+    @Email(message = "Invalid email format.")
+    private String email;
+
+    @Size(min = 6, message = "Password must be at least 6 characters long.")
+    private String password;
+
+    @NotNull(message = "Passwords do not match!")
+    private String verifyPassword;
+
+    public User() {
+
+    }
+
+    public User(String username, String email, String password, String verifyPassword) {
+        this();
         this.username = username;
         this.email = email;
         this.password = password;
-        this.id = nextId;
-        this.dateRegistered = LocalDate.now();
-        nextId++;
+        this.verifyPassword = verifyPassword;
+    }
+
+    public String getVerifyPassword() {
+        return verifyPassword;
+    }
+
+    public void setVerifyPassword(String verifyPassword) {
+        this.verifyPassword = verifyPassword;
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public LocalDate getDateRegistered() {
-        return dateRegistered;
     }
 
     public void setUsername(String username) {
@@ -50,5 +60,11 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void checkPassword() {
+        if (password != null && verifyPassword != null && !password.equals(verifyPassword)) {
+            verifyPassword = null;
+        }
     }
 }
